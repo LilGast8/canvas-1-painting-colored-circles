@@ -18,15 +18,6 @@ APP.Views.Circle = (function(window){
 		
 		this.isHover = false;
 		
-		/*
-		this.myCircle = {
-			x : 0,
-			y : 0,
-			width : 0,
-			height : 0,
-			radius : 0
-		};
-		*/
 		this.x = null;
 		this.y = null;
 		this.width = null;
@@ -34,6 +25,10 @@ APP.Views.Circle = (function(window){
 		this.radiusO = null;
 		this.radius = null;
 		this.color = null;
+		
+		this.RADIUS_MIN = 5;
+		this.RADIUS_VARIATION = 195;
+		this.RADIUS_MAX = this.RADIUS_MIN+this.RADIUS_VARIATION;
 	}
 	
 	
@@ -110,8 +105,9 @@ APP.Views.Circle = (function(window){
 		if(this.isHover) return false;
 		else this.isHover = true;
 		
-		console.log('enter :', this.name);
+	//	console.log('enter :', this.name);
 		
+		/*
 		if(this.fc.tickLeave) {
 			TweenLite.ticker.removeEventListener('tick', this.fc.tickLeave, false);
 			this.fc.tickLeave = null;
@@ -125,6 +121,9 @@ APP.Views.Circle = (function(window){
 			TweenLite.ticker.removeEventListener('tick', self.fc.tickEnter, false);
 			self.fc.tickEnter = null;
 		}});
+		*/
+		
+		TweenLite.to(this, 0.5, {radius:this.radiusO+this.radiusO*30/100, ease:Quad.easeOut});
 	};
 	
 	
@@ -132,8 +131,9 @@ APP.Views.Circle = (function(window){
 		if(!this.isHover) return false;
 		else this.isHover = false;
 		
-		console.log('leave :', this.name);
+	//	console.log('leave :', this.name);
 		
+		/*
 		if(this.fc.tickEnter) {
 			TweenLite.ticker.removeEventListener('tick', this.fc.tickEnter, false);
 			this.fc.tickEnter = null;
@@ -147,19 +147,23 @@ APP.Views.Circle = (function(window){
 			TweenLite.ticker.removeEventListener('tick', self.fc.tickLeave, false);
 			self.fc.tickLeave = null;
 		}});
+		*/
+		
+		TweenLite.to(this, 0.5, {radius:this.radiusO, ease:Quad.easeOut});
 	};
 	
 	
 	var _buildCircle = function() {
-		var posStart = _getPosStart();
+		var posStart = _getPosStart.call(this);
 		this.x = posStart.startX;
 		this.y = posStart.startY;
 		var toX = Math.round(Math.random()*this.canvas.width);
 		var toY = Math.round(Math.random()*this.canvas.height);
-		this.radiusO = this.radius = Math.round(Math.random()*195+5);
+		this.radiusO = this.radius = Math.round(Math.random()*this.RADIUS_VARIATION+this.RADIUS_MIN);
 		this.color = _getRandomColor();
 		var duration = Math.round(Math.random()*40+10)/10;
 		
+		/*
 		this.fc.tickBuild = APP.Views.Index.drawCanvas.bind(APP.Views.Index);
 		TweenLite.ticker.addEventListener('tick', this.fc.tickBuild, false);
 		
@@ -168,6 +172,8 @@ APP.Views.Circle = (function(window){
 			TweenLite.ticker.removeEventListener('tick', self.fc.tickBuild, false);
 			self.fc.tickBuild = null;
 		}});
+		*/
+		TweenLite.to(this, duration, {x:toX, y:toY, ease:Quart.easeOut});
 	};
 	
 	
@@ -180,15 +186,15 @@ APP.Views.Circle = (function(window){
 		
 		if(start === 0 ) { // top
 			x = Math.random()*(windowW+200)-100;
-			y = -60;
+			y = -this.RADIUS_MAX;
 		} else if(start == 1){ // right
-			x = windowW+60;
+			x = windowW+this.RADIUS_MAX;
 			y = Math.random()*(windowH+200)-100;
 		} else if(start == 2){ // bottom
 			x = Math.random()*(windowW+200)-100;
-			y = windowH+60;
+			y = windowH+this.RADIUS_MAX;
 		} else if(start == 3){ // left
-			x = -60;
+			x = -this.RADIUS_MAX;
 			y = Math.random()*(windowH+200)-100;
 		}
 		

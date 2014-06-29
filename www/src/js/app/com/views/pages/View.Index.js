@@ -16,6 +16,8 @@ APP.Views.Index = (function(window){
 	
 	
 	Index.prototype.initElt = function() {
+		this.fc = {};
+		
 		this.$.page = $(document.getElementById('page-content'));
 		
 		this.idCircle = 0;
@@ -39,6 +41,8 @@ APP.Views.Index = (function(window){
 		this.mouseMoveCanvasProxy = $.proxy(_mouseMove, this);
 		this.$.canvas.on('mousemove', this.mouseMoveCanvasProxy);
 		
+		TweenLite.ticker.addEventListener('tick', this.drawCanvas, this);
+		
 		_resize.call(this);
 	};
 	
@@ -49,18 +53,16 @@ APP.Views.Index = (function(window){
 	
 	
 	Index.prototype.drawCanvas = function() {
-		console.log('draw canvas');
+	//	console.log('draw canvas');
 		
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	//	this.context.globalCompositeOperation = 'lighter';
 	//	this.context.globalCompositeOperation = 'darken';
 		this.context.globalCompositeOperation = 'xor';
 		
-		
 		for(var i=0; i<this.circles.length; i++) {
 			this.circles[i].draw();
 		}
-		
 	};
 	
 	
@@ -88,13 +90,10 @@ APP.Views.Index = (function(window){
 	
 	
 	var _checkMouseHover = function(x, y) {
-	//	console.log(x, y);
-		
 		for(var i=0; i<this.circles.length; i++) {
 			var circle = this.circles[i];
 			if(x > circle.x-circle.radius && y > circle.y-circle.radius && x < circle.x+circle.radius && y < circle.y+circle.radius) circle.mouseEnter();
 			else circle.mouseLeave();
-		//	this.circles[i].x;
 		}
 	};
 	

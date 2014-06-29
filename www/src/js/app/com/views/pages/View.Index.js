@@ -52,6 +52,10 @@ APP.Views.Index = (function(window){
 		console.log('draw canvas');
 		
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	//	this.context.globalCompositeOperation = 'lighter';
+	//	this.context.globalCompositeOperation = 'darken';
+		this.context.globalCompositeOperation = 'xor';
+		
 		
 		for(var i=0; i<this.circles.length; i++) {
 			this.circles[i].draw();
@@ -61,8 +65,10 @@ APP.Views.Index = (function(window){
 	
 	
 	var _resize = function() {
-		this.canvas.width = APP.Main.$.window.width();
-		this.canvas.height = APP.Main.$.window.height();
+		APP.Main.resize();
+		
+		this.canvas.width = APP.Main.windowW;
+		this.canvas.height = APP.Main.windowH;
 		
 		this.drawCanvas();
 	};

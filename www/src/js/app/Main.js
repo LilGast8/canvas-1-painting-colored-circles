@@ -8,6 +8,9 @@ APP.Main = {};
 	
 	function Main() {
 		this.$ = {};
+		
+		this.windowW = null;
+		this.windowH = null;
 	}
 	
 	
@@ -22,6 +25,12 @@ APP.Main = {};
 			
 			this.windowLoadProxy = $.proxy(_windowLoad, this);
 			this.$.window.on('load', this.windowLoadProxy);
+		},
+		
+		
+		resize : function() {
+			this.windowW = this.$.window.width();
+			this.windowH = this.$.window.height();
 		}
 		
 	};

@@ -1,5 +1,5 @@
 
-# -------- Désactive les magic quotes -------- #
+# -------- Disable magic quotes -------- #
 SetEnv MAGIC_QUOTES 0
 
 
@@ -20,6 +20,6 @@ RewriteEngine on
 # ------------------------ #
 
 
-# -------- À DÉSACTIVER EN PROD -------- #
+# -------- TO DISABLE IN PROD -------- #
 RewriteRule json/(.*)$ assets/json/$1 [L]
 RewriteRule img/(.*)$ assets/img/$1 [L]

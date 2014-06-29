@@ -6,13 +6,15 @@ APP.Views = APP.Views || {};
 APP.Views.Circle = (function(window){
 	
 	
-	function Circle(canvas, context, id) {
+	function Circle(id, x, y) {
 		APP.View.call(this);
 		
 		this.name = 'Circle'+id;
+		this.toX = x;
+		this.toY = y;
 		
-		this.canvas = canvas;
-		this.context = context;
+		this.canvas = APP.Views.Index.canvas;
+		this.context = APP.Views.Index.context;
 		
 		this.fc = {};
 		
@@ -157,8 +159,8 @@ APP.Views.Circle = (function(window){
 		var posStart = _getPosStart.call(this);
 		this.x = posStart.startX;
 		this.y = posStart.startY;
-		var toX = Math.round(Math.random()*this.canvas.width);
-		var toY = Math.round(Math.random()*this.canvas.height);
+	//	var toX = Math.round(Math.random()*this.canvas.width);
+	//	var toY = Math.round(Math.random()*this.canvas.height);
 		this.radiusO = this.radius = Math.round(Math.random()*this.RADIUS_VARIATION+this.RADIUS_MIN);
 		this.color = _getRandomColor();
 		var duration = Math.round(Math.random()*40+10)/10;
@@ -173,7 +175,7 @@ APP.Views.Circle = (function(window){
 			self.fc.tickBuild = null;
 		}});
 		*/
-		TweenLite.to(this, duration, {x:toX, y:toY, ease:Quart.easeOut});
+		TweenLite.to(this, duration, {x:this.toX, y:this.toY, ease:Quart.easeOut});
 	};
 	
 	

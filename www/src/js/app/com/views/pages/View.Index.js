@@ -76,9 +76,9 @@ APP.Views.Index = (function(window){
 	};
 	
 	
-	var _addCircle = function() {
+	var _addCircle = function(e) {
 		this.idCircle++;
-		var circle = new APP.Views.Circle(this.canvas, this.context, this.idCircle);
+		var circle = new APP.Views.Circle(this.idCircle, e.x, e.y);
 		this.circles.push(circle);
 		circle.init();
 	};

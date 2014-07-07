@@ -6,6 +6,8 @@ APP.Main = (function(window) {
 	function Main() {
 		this.$ = {};
 		
+		this.stats = null;
+		
 		this.windowW = null;
 		this.windowH = null;
 	}

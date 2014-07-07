@@ -8,6 +8,18 @@ APP.Views.Index = (function(window){
 	
 	function Index() {
 		APP.View.call(this);
+		
+		this.mouse = {
+			x : null,
+			y : null
+		};
+		
+		this.idCircle = 0;
+		this.circles = [];
+		this.nbFrameSinceMouseDown = 0;
+		this.isAddCircle = false;
+		
+		this.SPEED_CREATE = 5;
 	}
 	
 	
@@ -20,14 +32,10 @@ APP.Views.Index = (function(window){
 		
 		this.$.page = $(document.getElementById('page-content'));
 		
-		this.idCircle = 0;
-		
 		this.canvas = document.getElementById('canvas');
 		this.context = this.canvas.getContext('2d');
 		
 		this.$.canvas = $(this.canvas);
-		
-		this.circles = [];
 	};
 	
 	
@@ -36,12 +44,15 @@ APP.Views.Index = (function(window){
 		APP.Main.$.window.on('resize', this.resizeWindowProxy);
 		
 		this.clickCanvasProxy = $.proxy(_addCircle, this);
-		this.$.canvas.on('click', this.clickCanvasProxy);
+		this.$.canvas.on('mousedown', this.clickCanvasProxy);
+		
+		this.clickCanvasProxy = $.proxy(_stopAddCircle, this);
+		this.$.canvas.on('mouseup', this.clickCanvasProxy);
 		
 		this.mouseMoveCanvasProxy = $.proxy(_mouseMove, this);
 		this.$.canvas.on('mousemove', this.mouseMoveCanvasProxy);
 		
-		TweenLite.ticker.addEventListener('tick', this.drawCanvas, this);
+		TweenLite.ticker.addEventListener('tick', _draw, this);
 		
 		_resize.call(this);
 	};
@@ -52,40 +63,61 @@ APP.Views.Index = (function(window){
 	};
 	
 	
-	Index.prototype.drawCanvas = function() {
-	//	console.log('draw canvas');
-		
-		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	//	this.context.globalCompositeOperation = 'lighter';
-	//	this.context.globalCompositeOperation = 'darken';
-		this.context.globalCompositeOperation = 'xor';
-		
-		for(var i=0; i<this.circles.length; i++) {
-			this.circles[i].draw();
-		}
-	};
-	
-	
 	var _resize = function() {
 		APP.Main.resize();
 		
 		this.canvas.width = APP.Main.windowW;
 		this.canvas.height = APP.Main.windowH;
-		
-		this.drawCanvas();
 	};
 	
 	
 	var _addCircle = function(e) {
-		this.idCircle++;
-		var circle = new APP.Views.Circle(this.idCircle, e.x, e.y);
-		this.circles.push(circle);
-		circle.init();
+		this.mouse.x = e.x;
+		this.mouse.y = e.y;
+		
+		this.isAddCircle = true;
+	};
+	
+	
+	var _stopAddCircle = function() {
+		this.isAddCircle = false;
 	};
 	
 	
 	var _mouseMove = function(e) {
-		_checkMouseHover.call(this, e.x, e.y);
+		this.mouse.x = e.x;
+		this.mouse.y = e.y;
+		
+		_checkMouseHover.call(this, this.mouse.x, this.mouse.y);
+	};
+	
+	
+	var _draw = function() {
+		APP.Main.stats.begin();
+		
+		if(this.isAddCircle) {
+			if(this.nbFrameSinceMouseDown === 0) _createCircle.call(this);
+			
+			this.nbFrameSinceMouseDown = this.nbFrameSinceMouseDown == this.SPEED_CREATE ? this.nbFrameSinceMouseDown = 0 : this.nbFrameSinceMouseDown+1;
+		}
+		else if(!this.isAddCircle && this.nbFrameSinceMouseDown !== 0) this.nbFrameSinceMouseDown = 0;
+		
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		this.context.globalCompositeOperation = 'xor';
+		
+		for(var i=0; i<this.circles.length; i++) {
+			this.circles[i].draw();
+		}
+		
+		APP.Main.stats.end();
+	};
+	
+	
+	var _createCircle = function() {
+		this.idCircle++;
+		var circle = new APP.Views.Circle(this.idCircle, this.mouse.x, this.mouse.y);
+		this.circles.push(circle);
+		circle.init();
 	};
 	
 	

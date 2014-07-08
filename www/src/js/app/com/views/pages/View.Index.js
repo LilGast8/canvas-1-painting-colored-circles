@@ -72,8 +72,8 @@ APP.Views.Index = (function(window){
 	
 	
 	var _addCircle = function(e) {
-		this.mouse.x = e.x;
-		this.mouse.y = e.y;
+		this.mouse.x = e.clientX;
+		this.mouse.y = e.clientY;
 		
 		this.isAddCircle = true;
 	};
@@ -85,8 +85,8 @@ APP.Views.Index = (function(window){
 	
 	
 	var _mouseMove = function(e) {
-		this.mouse.x = e.x;
-		this.mouse.y = e.y;
+		this.mouse.x = e.clientX;
+		this.mouse.y = e.clientY;
 		
 		_checkMouseHover.call(this, this.mouse.x, this.mouse.y);
 	};

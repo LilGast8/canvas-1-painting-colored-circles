@@ -28,8 +28,6 @@ APP.Views.Index = (function(window){
 	
 	
 	Index.prototype.initElt = function() {
-		this.fc = {};
-		
 		this.$.page = $(document.getElementById('page-content'));
 		
 		this.canvas = document.getElementById('canvas');
